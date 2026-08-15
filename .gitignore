@@ -1,0 +1,7 @@
+node_modules/
+out/
+*.vsix
+.vscode-test/
+samples/**
+!samples/010.bt
+!samples/SyntaxShowcase.bt

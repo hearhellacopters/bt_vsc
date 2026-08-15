@@ -1,0 +1,170 @@
+{
+    "Template Header": {
+        "prefix": "template-header",
+        "body": [
+            "//------------------------------------------------",
+            "//--- 010 Editor v${1:1.0} Binary Template",
+            "//",
+            "//      File: ${TM_FILENAME}",
+            "//   Authors: ${2:Author}",
+            "//   Version: ${3:1.0}",
+            "//   Purpose: ${4:Parse ... files.}",
+            "//  Category: ${5:Misc}",
+            "// File Mask: ${6:*.bin}",
+            "//  ID Bytes: ${7:}",
+            "//   History: ",
+            "//------------------------------------------------",
+            "$0"
+        ],
+        "description": "Standard 010 Editor template header comment block"
+    },
+    "Struct": {
+        "prefix": "struct",
+        "body": [
+            "struct ${1:NAME} {",
+            "\t${2:uint32 field;}",
+            "}$0;"
+        ],
+        "description": "Struct definition"
+    },
+    "Typedef Struct": {
+        "prefix": "tstruct",
+        "body": [
+            "typedef struct {",
+            "\t${1:uint32 field;}",
+            "} ${2:NAME}${3: <bgcolor=${4:cLtBlue}>};$0"
+        ],
+        "description": "typedef struct { ... } NAME <attrs>;"
+    },
+    "Struct With Arguments": {
+        "prefix": "astruct",
+        "body": [
+            "struct ${1:NAME}( ${2:int size} )",
+            "{",
+            "\t${3:ubyte data[ size ];}",
+            "};$0"
+        ],
+        "description": "Struct taking arguments"
+    },
+    "Union": {
+        "prefix": "union",
+        "body": [
+            "union ${1:NAME} {",
+            "\t${2:uint32 asInt;}",
+            "\t${3:float  asFloat;}",
+            "}$0;"
+        ],
+        "description": "Union definition"
+    },
+    "Enum": {
+        "prefix": "enum",
+        "body": [
+            "enum <${1:uint32}> ${2:NAME} {",
+            "\t${3:VALUE_A} = ${4:0},",
+            "\t${5:VALUE_B}",
+            "}$0;"
+        ],
+        "description": "Enum with underlying type"
+    },
+    "Typedef With Read/Write Functions": {
+        "prefix": "tread",
+        "body": [
+            "typedef ${1:uint} ${2:NAME} <read=Read$2, write=Write$2>;",
+            "",
+            "string Read$2( $2 v )",
+            "{",
+            "\tlocal string s;",
+            "\tSPrintf( s, \"${3:%u}\", v );",
+            "\treturn s;",
+            "}",
+            "",
+            "void Write$2( $2 &v, string s )",
+            "{",
+            "\tSScanf( s, \"$3\", v );",
+            "}$0"
+        ],
+        "description": "Custom type with read/write display functions"
+    },
+    "Local Variable": {
+        "prefix": "local",
+        "body": [
+            "local ${1:int} ${2:name} = ${3:0};$0"
+        ],
+        "description": "Local (non-mapped) variable"
+    },
+    "Attribute Block": {
+        "prefix": "attr",
+        "body": [
+            "<${1|read,write,format,comment,name,bgcolor,fgcolor,open,hidden,size,optimize,style|}=${2:value}>$0"
+        ],
+        "description": "Variable attribute block <key=value>"
+    },
+    "If / Else": {
+        "prefix": "ifelse",
+        "body": [
+            "if( ${1:condition} )",
+            "{",
+            "\t$2",
+            "}",
+            "else",
+            "{",
+            "\t$3",
+            "}$0"
+        ],
+        "description": "if / else block"
+    },
+    "For Loop": {
+        "prefix": "for",
+        "body": [
+            "for( ${1:i} = 0; $1 < ${2:count}; $1++ )",
+            "{",
+            "\t$3",
+            "}$0"
+        ],
+        "description": "for loop"
+    },
+    "While Not EOF": {
+        "prefix": "weof",
+        "body": [
+            "while( !FEof() )",
+            "{",
+            "\t$1",
+            "}$0"
+        ],
+        "description": "Read until end of file"
+    },
+    "Do While": {
+        "prefix": "dowhile",
+        "body": [
+            "do",
+            "{",
+            "\t$1",
+            "} while( ${2:condition} );$0"
+        ],
+        "description": "do / while loop"
+    },
+    "Switch": {
+        "prefix": "switch",
+        "body": [
+            "switch( ${1:value} )",
+            "{",
+            "\tcase ${2:0}:",
+            "\t\t$3",
+            "\t\tbreak;",
+            "\tdefault:",
+            "\t\t$4",
+            "}$0"
+        ],
+        "description": "switch statement"
+    },
+    "Function": {
+        "prefix": "func",
+        "body": [
+            "${1:void} ${2:Name}( ${3:} )",
+            "{",
+            "\t$0",
+            "}"
+        ],
+        "description": "Function definition"
+    }
+}

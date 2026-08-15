@@ -1,0 +1,416 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "010 Editor Binary Template",
+    "scopeName": "source.010-bt",
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#preprocessor" },
+        { "include": "#attributes" },
+        { "include": "#strings" },
+        { "include": "#characters" },
+        { "include": "#numbers" },
+        { "include": "#type-definition" },
+        { "include": "#keywords-control" },
+        { "include": "#keywords-operator" },
+        { "include": "#language-variables" },
+        { "include": "#storage-modifiers" },
+        { "include": "#storage-types" },
+        { "include": "#support-functions" },
+        { "include": "#color-constants" },
+        { "include": "#style-constants" },
+        { "include": "#boolean-constants" },
+        { "include": "#caps-constants" },
+        { "include": "#function-call" },
+        { "include": "#operators" },
+        { "include": "#punctuation" }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.block.010-bt",
+                    "begin": "/\\*",
+                    "end": "\\*/",
+                    "captures": {
+                        "0": { "name": "punctuation.definition.comment.010-bt" }
+                    }
+                },
+                {
+                    "name": "comment.line.double-slash.010-bt",
+                    "begin": "//",
+                    "end": "$",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.comment.010-bt" }
+                    }
+                }
+            ]
+        },
+        "preprocessor": {
+            "patterns": [
+                {
+                    "name": "meta.preprocessor.include.010-bt",
+                    "begin": "^\\s*(#)\\s*(include|insert)\\b",
+                    "end": "$",
+                    "beginCaptures": {
+                        "0": { "name": "keyword.control.directive.include.010-bt" },
+                        "1": { "name": "punctuation.definition.directive.010-bt" }
+                    },
+                    "patterns": [
+                        { "include": "#comments" },
+                        {
+                            "name": "string.quoted.double.include.010-bt",
+                            "begin": "\"",
+                            "end": "\"",
+                            "captures": {
+                                "0": { "name": "punctuation.definition.string.010-bt" }
+                            }
+                        },
+                        {
+                            "name": "string.quoted.other.include.010-bt",
+                            "begin": "<",
+                            "end": ">",
+                            "captures": {
+                                "0": { "name": "punctuation.definition.string.010-bt" }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "meta.preprocessor.macro.010-bt",
+                    "begin": "^\\s*(#)\\s*(define|undef)\\b\\s*([A-Za-z_]\\w*)?",
+                    "end": "(?<!\\\\)$",
+                    "beginCaptures": {
+                        "1": { "name": "punctuation.definition.directive.010-bt" },
+                        "2": { "name": "keyword.control.directive.define.010-bt" },
+                        "3": { "name": "entity.name.function.preprocessor.010-bt" }
+                    },
+                    "patterns": [
+                        { "include": "#comments" },
+                        { "include": "#strings" },
+                        { "include": "#characters" },
+                        { "include": "#numbers" },
+                        { "include": "#operators" }
+                    ]
+                },
+                {
+                    "name": "meta.preprocessor.conditional.010-bt",
+                    "begin": "^\\s*(#)\\s*(ifdef|ifndef|if|elif|else|endif)\\b",
+                    "end": "$",
+                    "beginCaptures": {
+                        "1": { "name": "punctuation.definition.directive.010-bt" },
+                        "2": { "name": "keyword.control.directive.conditional.010-bt" }
+                    },
+                    "patterns": [
+                        { "include": "#comments" },
+                        { "include": "#numbers" },
+                        { "include": "#operators" },
+                        {
+                            "name": "entity.name.function.preprocessor.010-bt",
+                            "match": "\\b[A-Za-z_]\\w*\\b"
+                        }
+                    ]
+                },
+                {
+                    "name": "meta.preprocessor.pragma.010-bt",
+                    "begin": "^\\s*(#)\\s*(pragma|warning|error|line)\\b",
+                    "end": "$",
+                    "beginCaptures": {
+                        "1": { "name": "punctuation.definition.directive.010-bt" },
+                        "2": { "name": "keyword.control.directive.pragma.010-bt" }
+                    },
+                    "patterns": [
+                        { "include": "#comments" },
+                        { "include": "#strings" },
+                        { "include": "#numbers" }
+                    ]
+                }
+            ]
+        },
+        "attributes": {
+            "name": "meta.attribute.010-bt",
+            "begin": "(<)(?=\\s*(?:read|write|comment|format|fgcolor|bgcolor|style|open|hidden|name|size|optimize|edit|pos|localpos|disasm|warn)\\s*=)",
+            "end": ">",
+            "beginCaptures": {
+                "1": { "name": "punctuation.definition.attribute.begin.010-bt" }
+            },
+            "endCaptures": {
+                "0": { "name": "punctuation.definition.attribute.end.010-bt" }
+            },
+            "patterns": [
+                { "include": "#comments" },
+                {
+                    "name": "entity.other.attribute-name.010-bt",
+                    "match": "\\b(read|write|comment|format|fgcolor|bgcolor|style|open|hidden|name|size|optimize|edit|pos|localpos|disasm|warn)\\b(?=\\s*=)"
+                },
+                {
+                    "name": "punctuation.separator.key-value.010-bt",
+                    "match": "="
+                },
+                {
+                    "name": "punctuation.separator.attribute.010-bt",
+                    "match": ","
+                },
+                {
+                    "name": "support.constant.attribute-value.010-bt",
+                    "match": "\\b(hex|decimal|decimalhex|octal|binary|suppress|check|color|flags|none)\\b"
+                },
+                { "include": "#strings" },
+                { "include": "#characters" },
+                { "include": "#numbers" },
+                { "include": "#color-constants" },
+                { "include": "#style-constants" },
+                { "include": "#boolean-constants" },
+                { "include": "#keywords-operator" },
+                { "include": "#language-variables" },
+                { "include": "#support-functions" },
+                { "include": "#caps-constants" },
+                { "include": "#function-call" },
+                { "include": "#operators" }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.wide.010-bt",
+                    "begin": "L\"",
+                    "end": "\"",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.string.begin.010-bt" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.string.end.010-bt" }
+                    },
+                    "patterns": [
+                        { "include": "#string-escapes" },
+                        { "include": "#string-placeholders" }
+                    ]
+                },
+                {
+                    "name": "string.quoted.double.010-bt",
+                    "begin": "\"",
+                    "end": "\"",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.string.begin.010-bt" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.string.end.010-bt" }
+                    },
+                    "patterns": [
+                        { "include": "#string-escapes" },
+                        { "include": "#string-placeholders" }
+                    ]
+                }
+            ]
+        },
+        "string-escapes": {
+            "name": "constant.character.escape.010-bt",
+            "match": "\\\\(?:[abfnrtv'\"\\\\?0]|x[0-9A-Fa-f]{1,4}|[0-7]{1,3}|u[0-9A-Fa-f]{4})"
+        },
+        "string-placeholders": {
+            "name": "constant.other.placeholder.010-bt",
+            "match": "%[-+ #0]*\\d*(?:\\.\\d+)?(?:hh|h|ll|l|L)?[diouxXeEfgGcs%]"
+        },
+        "characters": {
+            "name": "string.quoted.single.010-bt",
+            "begin": "'",
+            "end": "'",
+            "beginCaptures": {
+                "0": { "name": "punctuation.definition.string.begin.010-bt" }
+            },
+            "endCaptures": {
+                "0": { "name": "punctuation.definition.string.end.010-bt" }
+            },
+            "patterns": [
+                { "include": "#string-escapes" }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.hex.010-bt",
+                    "match": "\\b0[xX][0-9A-Fa-f]+(?:[uUlL]{0,3})\\b"
+                },
+                {
+                    "name": "constant.numeric.hex.suffix.010-bt",
+                    "match": "\\b[0-9][0-9A-Fa-f]*[hH]\\b"
+                },
+                {
+                    "name": "constant.numeric.binary.010-bt",
+                    "match": "\\b0[bB][01]+(?:[uUlL]{0,3})\\b"
+                },
+                {
+                    "name": "constant.numeric.octal.010-bt",
+                    "match": "\\b0[0-7]+(?:[uUlL]{0,3})\\b"
+                },
+                {
+                    "name": "constant.numeric.float.010-bt",
+                    "match": "(?<!\\w)(?:\\d+\\.\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?[fFlL]?\\b|\\b\\d+[eE][+-]?\\d+[fFlL]?\\b|\\b\\d+[fF]\\b"
+                },
+                {
+                    "name": "constant.numeric.decimal.010-bt",
+                    "match": "\\b\\d+(?:[uUlL]{0,3})\\b"
+                }
+            ]
+        },
+        "type-definition": {
+            "patterns": [
+                {
+                    "match": "\\b(struct|union|enum)\\s+(<[^>]*>\\s*)?([A-Za-z_]\\w*)",
+                    "captures": {
+                        "1": { "name": "storage.type.$1.010-bt" },
+                        "2": {
+                            "patterns": [
+                                { "include": "#storage-types" },
+                                { "include": "#attributes" }
+                            ]
+                        },
+                        "3": { "name": "entity.name.type.010-bt" }
+                    }
+                },
+                {
+                    "match": "\\b(typedef)\\b",
+                    "name": "storage.type.typedef.010-bt"
+                }
+            ]
+        },
+        "keywords-control": {
+            "name": "keyword.control.010-bt",
+            "match": "\\b(if|else|for|while|do|switch|case|default|break|continue|return)\\b"
+        },
+        "keywords-operator": {
+            "name": "keyword.operator.word.010-bt",
+            "match": "\\b(sizeof|startof|parentof|exists|function_exists)\\b"
+        },
+        "language-variables": {
+            "name": "variable.language.this.010-bt",
+            "match": "\\b(this)\\b"
+        },
+        "storage-modifiers": {
+            "name": "storage.modifier.010-bt",
+            "match": "\\b(local|const|signed|unsigned|struct|union|enum)\\b"
+        },
+        "storage-types": {
+            "patterns": [
+                {
+                    "name": "storage.type.primitive.010-bt",
+                    "match": "\\b(char|byte|CHAR|BYTE|int8|INT8|uchar|ubyte|UCHAR|UBYTE|uint8|UINT8|short|int16|SHORT|INT16|ushort|uint16|uword|USHORT|UINT16|WORD|UWORD|int|int32|long|INT|INT32|LONG|uint|uint32|ulong|udword|UINT|UINT32|ULONG|DWORD|UDWORD|int64|quad|QUAD|INT64|__int64|uint64|uquad|uqword|UQUAD|UINT64|QWORD|UQWORD|__uint64|float|FLOAT|double|DOUBLE|hfloat|HFLOAT|void|VOID)\\b"
+                },
+                {
+                    "name": "storage.type.string.010-bt",
+                    "match": "\\b(string|wchar_t|wstring)\\b"
+                },
+                {
+                    "name": "storage.type.time.010-bt",
+                    "match": "\\b(DOSDATE|DOSTIME|FILETIME|OLETIME|time_t|time64_t)\\b"
+                },
+                {
+                    "name": "storage.type.special.010-bt",
+                    "match": "\\b(GUID|Opcode)\\b"
+                }
+            ]
+        },
+        "support-functions": {
+            "patterns": [
+                {
+                    "comment": "Interface functions",
+                    "name": "support.function.builtin.interface.010-bt",
+                    "match": "\\b(AddBookmark|AddressFileToLocal|AddressLocalToFile|Assert|ClearClipboard|CopyBytesToClipboard|CopyStringToClipboard|CopyToClipboard|CutToClipboard|DeleteFile|DisableUndo|DisplayFormatBinary|DisplayFormatDecimal|DisplayFormatDecimalHex|DisplayFormatHex|DisplayFormatOctal|EnableUndo|Exec|Exit|ExpandAll|ExportCSV|ExportXML|FileClose|FileCount|FileExists|FileNew|FileOpen|FileSave|FileSaveRange|FileSelect|FindOpenFileW?|GetArgW?|GetBackColor|GetBookmarkArraySize|GetBookmarkBackColor|GetBookmarkForeColor|GetBookmarkMoveWithCursor|GetBookmarkName|GetBookmarkPos|GetBookmarkType|GetBytesPerLine|GetClipboardBytes|GetClipboardIndex|GetClipboardString|GetCurrentTime|GetCurrentDate|GetCurrentDateTime|GetCursorPos|GetDefaultDateFormat|GetDefaultDateTimeFormat|GetDefaultTimeFormat|GetDisplayFormat|GetEnv|GetFileAttributesUnix|GetFileAttributesWin|GetFileCharSet|GetFileInterface|GetFileNameW?|GetFileNum|GetForeColor|GetKeepFileTime|GetMouseWheelScrollSpeed|GetNumArgs|GetNumBookmarks|GetReadOnly|GetScriptNameW?|GetScriptFileNameW?|GetSelSize|GetSelStart|GetStartingAddress|GetStyle|GetStyleBackColor|GetStyleForeColor|GetTempDirectory|GetTempFileName|GetTemplateNameW?|GetTemplateFileNameW?|GetUnoptimizedArraysCollapsible|GetWorkingDirectoryW?|HighlightAllowInstanceSharing|HighlightApplyColor|HighlightApplyStyle|HighlightBuildKeywordList|HighlightBytesRealtime|HighlightCheckCommentRule|HighlightCheckKeywordRule|HighlightCheckMultiLineRule|HighlightCheckSingleLineRule|HighlightCheckTagRule|HighlightCheckTagTokenRule|HighlightColorPattern|HighlightFindString|HighlightFindStyle|HighlightGetNextToken|HighlightGetStyleForeColor|HighlightGetStyleBackColor|HighlightLineRealtime|HighlightMatchKeyword|HighlightMatchString|InputDirectory|InputFloat|InputNumber|InputOpenFileNames?|InputRadioButtonBox|InputSaveFileName|InputString|InputWString|InsertFile|IsEditorFocused|IsModified|IsNoUIMode|IsUndoEnabled|MessageBox|OffsetClear|OffsetGetLimitSize|OffsetGetStart|OffsetSetLimitSize|OffsetSetStart|OutputPaneClear|OutputPaneSave|OutputPaneCopy|PasteFromClipboard|Printf|ProcessGetHeapLocalAddress|ProcessGetHeapModule|ProcessGetHeapSize|ProcessGetHeapStartAddress|ProcessGetNumHeaps|ProcessHeapToLocalAddress|ProcessLocalToHeapAddress|ProjectClose|ProjectOpen|RemoveBookmark|RenameFile|RequiresFile|RequiresVersion|RunTemplate|SetBackColor|SetColor|SetForeColor|SetBytesPerLine|SetClipboardIndex|SetCursorPos|SetDisplayFormat|SetEnv|SetFileAttributesUnix|SetFileAttributesWin|SetFileCharSet|SetFileInterface|SetKeepFileTime|SetMouseWheelScrollSpeed|SetReadOnly|SetSelection|SetStartingAddress|SetStyle|SetUnoptimizedArraysCollapsible|SetWorkingDirectoryW?|StatusMessage|ThemeAutoScaleColors|Warning)\\b(?=\\s*\\()"
+                },
+                {
+                    "comment": "I/O functions",
+                    "name": "support.function.builtin.io.010-bt",
+                    "match": "\\b(BigEndian|BitfieldDisablePadding|BitfieldEnablePadding|BitfieldGetAutoCheckBox|BitfieldGetCurrentShift|BitfieldLeftToRight|BitfieldRightToLeft|BitfieldSetAutoCheckBox|ConvertBytesToDouble|ConvertBytesToFloat|ConvertBytesToHFloat|ConvertDataToBytes|DeleteBytes|DirectoryExists|DisasmGetMode|DisasmNumOps|DisasmOpSizeFromFile|DisasmOpStringFromFile|DisasmOpString|DisasmSetMode|FEof|FileSize|FindFiles|FPrintf|FSeek|FSkip|FTell|InsertBytes|IsBigEndian|IsBitfieldLeftToRight|IsBitfieldPaddingEnabled|IsLittleEndian|LittleEndian|MakeDir|OverwriteBytes|ReadByte|ReadDouble|ReadFloat|ReadHFloat|ReadInt64|ReadInt|ReadQuad|ReadShort|ReadUByte|ReadUInt64|ReadUInt|ReadUQuad|ReadUShort|ReadLine|ReadBytes|ReadStringLength|ReadString|ReadWLine|ReadWStringLength|ReadWString|TextAddressToLine|TextAddressToColumn|TextColumnToAddress|TextGetNumLines|TextGetLineSize|TextLineToAddress|TextReadLineW?|TextWriteLineW?|WriteByte|WriteDouble|WriteFloat|WriteHFloat|WriteInt64|WriteInt|WriteQuad|WriteShort|WriteUByte|WriteUInt64|WriteUInt|WriteUQuad|WriteUShort|WriteBytes|WriteString|WriteWString)\\b(?=\\s*\\()"
+                },
+                {
+                    "comment": "Math functions",
+                    "name": "support.function.builtin.math.010-bt",
+                    "match": "\\b(Abs|Ceil|Cos|Exp|Floor|Log10|Log|Max|Min|Pow|Random|Sin|Sqrt|SRand|SwapBytes|Tan)\\b(?=\\s*\\()"
+                },
+                {
+                    "comment": "String functions",
+                    "name": "support.function.builtin.string.010-bt",
+                    "match": "\\b(Atof|Atoi|BinaryStrToInt|ConvertString|DosDateToString|DosTimeToString|EnumFlagsToString|EnumStringToFlags|EnumToString|FileNameGetBaseW?|FileNameGetExtensionW?|FileNameGetPathW?|FileNameSetExtensionW?|FileTimeToString|GUIDToString|IntToBinaryStr|IsCharAlphaNumW?|IsCharAlphaW?|IsCharNumW?|IsCharPunctW?|IsCharSymbolW?|IsCharWhitespaceW?|Memcmp|Memcpy|Memset|OleTimeToString|RegExMatchW?|RegExSearchW?|SPrintf|SScanf|Strcat|Strchr|Strcmp|Strcpy|StrDel|Stricmp|StringToDosDate|StringToDosTime|StringToFileTime|StringToGUID|StringToOleTime|StringToTimeT|StringToTime64T|StringToUTF8|StringToWString|Strlen|Strncmp|Strncpy|Strnicmp|Strstr|Str|SubStr|TimeTToString|Time64TToString|ToLowerW?|ToUpperW?|WMemcmp|WMemcpy|WMemset|WStrcat|WStrchr|WStrcmp|WStrcpy|WStrDel|WStricmp|WStringToString|WStringToUTF8|WStrlen|WStrncmp|WStrncpy|WStrnicmp|WStrstr|WSubStr)\\b(?=\\s*\\()"
+                },
+                {
+                    "comment": "Tool functions",
+                    "name": "support.function.builtin.tools.010-bt",
+                    "match": "\\b(ChecksumAlgArrayStr|ChecksumAlgArrayBytes|ChecksumAlgStr|ChecksumAlgBytes|Checksum|Compare|ConvertASCIIToEBCDIC|ConvertASCIIToUNICODEW?|ConvertEBCDICToASCII|ConvertUNICODEToASCIIW?|ExportFile|FindAll|FindFirst|FindInFiles|FindNext|FindStrings|GetSectorSize|HexOperation|Histogram|ImportFile|IsDrive|IsLogicalDrive|IsPhysicalDrive|IsProcess|OpenLogicalDrive|OpenPhysicalDrive|OpenProcessById|OpenProcessByName|ReplaceAll)\\b(?=\\s*\\()"
+                }
+            ]
+        },
+        "color-constants": {
+            "name": "support.constant.color.010-bt",
+            "match": "\\b(cBlack|cRed|cDkRed|cLtRed|cGreen|cDkGreen|cLtGreen|cBlue|cDkBlue|cLtBlue|cPurple|cDkPurple|cLtPurple|cAqua|cDkAqua|cLtAqua|cYellow|cDkYellow|cLtYellow|cDkGray|cGray|cLtGray|cSilver|cWhite|cNone)\\b"
+        },
+        "style-constants": {
+            "name": "support.constant.style.010-bt",
+            "match": "\\b(sHeading[1-4]Accent|sHeading[1-4]|sSection[1-4]Accent|sSection[1-4]|sMarkerAccent|sMarker|sDataAccent|sData|sNone)\\b"
+        },
+        "boolean-constants": {
+            "name": "constant.language.boolean.010-bt",
+            "match": "\\b(true|false|TRUE|FALSE|True|False)\\b"
+        },
+        "caps-constants": {
+            "name": "constant.other.caps.010-bt",
+            "match": "\\b[A-Z_][A-Z0-9_]{2,}\\b"
+        },
+        "function-call": {
+            "match": "\\b([A-Za-z_]\\w*)\\s*(?=\\()",
+            "captures": {
+                "1": { "name": "entity.name.function.010-bt" }
+            }
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.comparison.010-bt",
+                    "match": "==|!=|<=|>=|&&|\\|\\|"
+                },
+                {
+                    "name": "keyword.operator.assignment.010-bt",
+                    "match": "\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<<=|>>=|="
+                },
+                {
+                    "name": "keyword.operator.increment-decrement.010-bt",
+                    "match": "\\+\\+|--"
+                },
+                {
+                    "name": "keyword.operator.bitwise.010-bt",
+                    "match": "<<|>>|&|\\||\\^|~"
+                },
+                {
+                    "name": "keyword.operator.arithmetic.010-bt",
+                    "match": "[-+*/%]"
+                },
+                {
+                    "name": "keyword.operator.logical.010-bt",
+                    "match": "!"
+                },
+                {
+                    "name": "keyword.operator.ternary.010-bt",
+                    "match": "\\?|:"
+                },
+                {
+                    "name": "keyword.operator.relational.010-bt",
+                    "match": "<|>"
+                }
+            ]
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "name": "punctuation.terminator.statement.010-bt",
+                    "match": ";"
+                },
+                {
+                    "name": "punctuation.separator.comma.010-bt",
+                    "match": ","
+                },
+                {
+                    "name": "punctuation.accessor.010-bt",
+                    "match": "\\."
+                }
+            ]
+        }
+    }
+}

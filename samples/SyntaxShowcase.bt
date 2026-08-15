@@ -1,0 +1,137 @@
+//------------------------------------------------
+//--- 010 Editor Binary Template
+//
+//      File: SyntaxShowcase.bt
+//   Authors: Syntax highlighting test
+//   Version: 1.0
+//   Purpose: Exercises every construct the grammar
+//            should highlight. Not a real template.
+//------------------------------------------------
+
+/*
+ * Multi-line comment block.
+ * Should render as comment.block.
+ */
+
+#include "Common.bt"
+#define MAGIC_SIGNATURE 0x89504E47
+#define HALF(x) ((x) / 2)
+#ifndef MAX_CHUNKS
+    #define MAX_CHUNKS 64
+#endif
+#ifdef DEBUG
+    #warning "Debug build of template"
+#endif
+
+// Endianness + display setup (built-in functions)
+LittleEndian();
+BigEndian();
+SetBackColor( cLtYellow );
+DisplayFormatHex();
+
+// Local variables with primitive and 010-specific types
+local int i = 0;
+local int64 total = 0L;
+local uint32 mask = 0b10101010;
+local char newline = '\n';     // char literal with escape
+local float ratio = 3.14159e-2f;
+local double big = .5;
+local string msg = "Length=%d bytes\n";
+local wstring wide = L"wide \x263A text";
+local char esc = '\t';
+const uint SECTOR = 0x200;
+
+// Enum with attributes and explicit values
+enum <uint32> CHUNK_TYPE {
+    CT_HEADER  = 0x49484452,   // "IHDR"
+    CT_DATA    = 0x49444154,   // "IDAT"
+    CT_END     = 0x49454E44    // "IEND"
+};
+
+// Typedef with read/write attribute functions
+typedef uint64 FILESIZE_T <read=ReadFileSize, write=WriteFileSize, format=hex>;
+
+string ReadFileSize( FILESIZE_T size )
+{
+    local string s;
+    SPrintf( s, "%Lu bytes", size );
+    return s;
+}
+
+void WriteFileSize( FILESIZE_T &size, string s )
+{
+    SScanf( s, "%Lu", size );
+}
+
+// Struct with attributes, bitfields, nested types, arrays
+struct HEADER {
+    uint32  magic <format=hex, comment="File signature">;
+    if( magic != MAGIC_SIGNATURE )
+        Warning( "Bad magic: %08X", magic );
+
+    ubyte   version;
+    ubyte   flags : 4 <comment="low nibble only">;
+    ubyte   reserved : 4;
+    FILETIME created <fgcolor=cDkGreen>;
+    DOSDATE  stamp;
+    time_t   modified;
+    FILESIZE_T length;
+    char     name[32] <bgcolor=cLtGray, open=suppress>;
+} header <bgcolor=cLtBlue, name="Main Header", open=true>;
+
+union VALUE {
+    int32  asInt;
+    float  asFloat;
+    ubyte  raw[4];
+};
+
+// Struct with arguments and forward seek logic
+struct CHUNK( int index )
+{
+    uint32     length;
+    CHUNK_TYPE type <read=EnumToString(this)>;
+    local quad start = FTell();
+    ubyte      data[ length ] <optimize=false, hidden=false>;
+    uint32     crc <format=hex, fgcolor=cRed,
+                    comment=Str("chunk %d @ 0x%LX", index, start)>;
+};
+
+// Control flow: while / for / do / switch / parentof / exists / startof
+local int count = 0;
+while( !FEof() && count < MAX_CHUNKS )
+{
+    CHUNK chunk( count );
+
+    switch( chunk.type )
+    {
+        case CT_HEADER:
+            total += chunk.length;
+            break;
+        case CT_END:
+            count = MAX_CHUNKS;   // force exit
+            break;
+        default:
+            continue;
+    }
+
+    if( exists( chunk.data ) && sizeof( chunk ) > SECTOR )
+        Printf( "big chunk at 0x%LX\n", startof( chunk ) );
+    else
+        FSkip( HALF(SECTOR) );
+
+    count++;
+}
+
+do
+{
+    i += ReadByte( FTell() );
+} while( i < 10 );
+
+for( i = 0; i < header.version; i++ )
+    total += Abs( ReadInt( i * 4 ) ) + Max( i, 2 );
+
+// Ternary, bitwise, comparison operators
+local uint check = ( total > 0 ) ? ( mask << 2 ) | 0x0F : ~mask ^ 0xFF;
+local int  ok = ( check >= 10 && check != 13 ) || FEof();
+
+return;

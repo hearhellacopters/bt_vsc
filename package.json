@@ -1,0 +1,78 @@
+{
+    "name": "010-binary-template",
+    "displayName": "010 Editor Binary Template (Unofficial)",
+    "description": "Unofficial syntax highlighting, hover docs, completion, snippets, and outline for 010 Editor Binary Template (.bt) files. Not affiliated with or endorsed by SweetScape Software.",
+    "version": "0.2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hearhellacopters/bt_vsc.git"
+    },
+    "publisher": "bt-tools",
+    "license": "MIT",
+    "icon": "images/icon.png",
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Snippets"
+    ],
+    "keywords": [
+        "010 Editor",
+        "binary template",
+        "bt",
+        "reverse engineering",
+        "hex editor"
+    ],
+    "main": "./out/extension.js",
+    "activationEvents": [],
+    "contributes": {
+        "languages": [
+            {
+                "id": "010-binary-template",
+                "aliases": [
+                    "010 Editor Binary Template",
+                    "010 Template",
+                    "bt"
+                ],
+                "extensions": [
+                    ".bt"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "010-binary-template",
+                "scopeName": "source.010-bt",
+                "path": "./syntaxes/010editor-bt.tmLanguage.json"
+            },
+            {
+                "scopeName": "markdown.bt.codeblock",
+                "path": "./syntaxes/markdown-bt-injection.json",
+                "injectTo": [
+                    "text.html.markdown"
+                ],
+                "embeddedLanguages": {
+                    "meta.embedded.block.010-bt": "010-binary-template"
+                }
+            }
+        ],
+        "snippets": [
+            {
+                "language": "010-binary-template",
+                "path": "./snippets/010-bt.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@types/vscode": "^1.75.0",
+        "typescript": "^5.4.0"
+    }
+}
