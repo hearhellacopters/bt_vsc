@@ -7,7 +7,7 @@
         "type": "git",
         "url": "git+https://github.com/hearhellacopters/bt_vsc.git"
     },
-    "publisher": "bt-tools",
+    "publisher": "hearhellacopters",
     "license": "MIT",
     "icon": "images/icon.png",
     "engines": {
